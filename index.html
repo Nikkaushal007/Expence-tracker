@@ -4,53 +4,60 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expence tracker</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="style.css" />
+    <title>Expence Tracker</title>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="container">
-        <div class="sub-container">
-            
-            
-            <div class="user-amount-container">
-            <h3>Enter Expenses</h3>
-            <p class="hide error" id="product-title-error">
-                Values cannot be empty
-            </p>
-            <input
-                type="text"
-                class="product-title"
-                id="product-title"
-                placeholder="Enter Title of Product"
-            />
-            <input
-                type="number"
-                id="user-amount"
-                placeholder="Enter Cost of Product"
-            />
-            <button class="submit" id="add-expenses">Add</button>
-            </div>
+    <header>
+        <h1 class="title">Expense Tracker</h1>
+    <header>
+
+    <section class="content">
+        <h3 class="secondTitle">Add new expense: </h3>
+        <div class="form">
+            <form id="expForm">
+                <div class="formLine left">
+                    <span for="type">Type:</span>
+                    <select id="type">
+                        <option value="chooseOne">Choose one...</option>
+                        <option value="Card">Card</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Crypto">Crypto</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="formLine right">
+                    <span for="name">Name:</span>
+                    <input type="text" id="name">
+                </div>
+
+                <div class="formLine left">
+                    <span for="date">Date:</span>
+                    <input type="date" id="date">
+                </div>
+                <div class="formLine right">
+                    <span for="amount">Amount:</span>
+                    <input type="text" id="amount">
+                </div>
+                <button type="submit" class="buttonSave">Add new expense</button>
+            </form>
         </div>
-    
-        <div class="output-container flex-space">
-            <div class="totalExpenses">
-                <p>Total Expenses For Today</p>
-                <span id="expenditure-value">0</span>
-            </div>
-            
-            
-        </div>
-        </div>
-    
-        <div class="list">
-        <h3>Expenses</h3>
-        <div class="list-container" id="list"></div>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
-    </body>
+    </section>
+    <section class="content">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody id="expenseTable">
+
+            </tbody>
+        </table>
+    </section>
+    <script src="/app.js"></script>
+</body>
 </html>
