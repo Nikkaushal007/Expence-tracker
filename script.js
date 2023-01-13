@@ -1,77 +1,68 @@
-let userAmount = document.getElementById("user-amount");
-const addExpensesButton = document.getElementById("add-expenses");
-const productTitle = document.getElementById("product-title");
-const errorMessage = document.getElementById("budget-error");
-const productTitleError = document.getElementById("product-title-error");
-const productCostError = document.getElementById("product-cost-error");
-const expenditureValue = document.getElementById("expenditure-value");
-const list = document.getElementById("list");
+document.getElementById('expForm').addEventListener('submit', addExpense);
 
-//Function To Disable Edit and Delete Button
-const disableButtons = (bool) => {
-let editButtons = document.getElementsByClassName("edit");
-Array.from(editButtons).forEach((element) => {
-    element.disabled = bool;
-});
-};
+// initial array of expenses, reading from localStorage
+const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 
-//Function To Modify List Elements
-const modifyElement = (element, edit = false) => {
-let parentDiv = element.parentElement;
-let currentExpense = expenditureValue.innerText;
-let parentAmount = parentDiv.querySelector(".amount").innerText;
-if (edit) {
-    let parentText = parentDiv.querySelector(".product").innerText;
-    productTitle.value = parentText;
-    userAmount.value = parentAmount;
-    disableButtons(true);
+function addExpense(e){
+    e.preventDefault();
+
+    // get type, name, date, and amount
+    let type = document.getElementById('type').value;
+    let name = document.getElementById('name').value;
+    let date = document.getElementById('date').value;
+    let amount = document.getElementById('amount').value;
+
+    if(type != 'chooseOne' 
+        && name.length > 0 
+        && date != 0 
+        && amount > 0){
+        const expense = {
+            type, 
+            name, 
+            date,
+            amount, 
+            id: expenses.length > 0 ? expenses[expenses.length - 1].id + 1 : 1,
+        }
+
+        expenses.push(expense);
+         localStorage 
+         localStorage.setItem('expenses', JSON.stringify(expenses));
+    }
+
+    document.getElementById('expForm').reset();
+    showExpenses();
 }
 
-expenditureValue.innerText =
-    parseInt(currentExpense) - parseInt(parentAmount);
-parentDiv.remove();
-};
+const showExpenses = () => {
 
-//Function To Create List
-const listCreator = (expenseName, expenseValue) => {
-let sublistContent = document.createElement("div");
-sublistContent.classList.add("sublist-content", "flex-space");
-list.appendChild(sublistContent);
-sublistContent.innerHTML = `<p class="product">${expenseName}</p><p class="amount">\₹${expenseValue}</p>`;
-let editButton = document.createElement("button");
-editButton.classList.add("fa-solid", "fa-pen-to-square", "edit");
-editButton.style.fontSize = "1.2em";
-editButton.addEventListener("click", () => {
-    modifyElement(editButton, true);
-});
-let deleteButton = document.createElement("button");
-deleteButton.classList.add("fa-solid", "fa-trash-can", "delete");
-deleteButton.style.fontSize = "1.2em";
-deleteButton.addEventListener("click", () => {
-    modifyElement(deleteButton);
-});
-sublistContent.appendChild(editButton);
-sublistContent.appendChild(deleteButton);
-document.getElementById("list").appendChild(sublistContent);
-};
+    const expenseTable = document.getElementById('expenseTable');
 
-//Function To Add Expenses
-addExpensesButton.addEventListener("click", () => {
-if (!userAmount.value || !productTitle.value) {
-    productTitleError.classList.remove("hide");
-    return false;
+    expenseTable.innerHTML = '';
+
+    for(let i = 0; i < expenses.length; i++){
+        expenseTable.innerHTML += `
+            <tr>
+                <td>${expenses[i].type}</td>
+                <td>${expenses[i].name}</td>
+                <td>${expenses[i].date}</td>
+                <td>₹${expenses[i].amount}</td>
+                <td><a class="deleteButton" onclick="deleteExpense(${expenses[i].id})">
+                    Delete</td>
+            </tr>
+        `;
+    }
 }
 
-disableButtons(false);
+const deleteExpense = (id) => {
+    for(let i = 0; i < expenses.length; i++){
+        if(expenses[i].id == id){
+            expenses.splice(i, 1);
+        }
+    }
 
-let expenditure = parseInt(userAmount.value);
+    // localStorage
+    localStorage.setItem('expenses', JSON.stringify(expenses));
+    showExpenses();
+}
 
-let sum = parseInt(expenditureValue.innerText) + expenditure;
-expenditureValue.innerText = sum;
-
-  //Create list
-listCreator(productTitle.value, userAmount.value);
-  //Empty inputs
-productTitle.value = "";
-userAmount.value = "";
-});
+showExpenses();
